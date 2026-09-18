@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Database Service: MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: smartprice-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: smartprice
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - smartprice-network
+
+  # Backend REST API Service
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: smartprice-server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/smartprice
+      - JWT_SECRET=production_docker_compose_super_secret_jwt_key_2026
+      - CLIENT_URL=http://localhost:5173
+    depends_on:
+      - mongodb
+    networks:
+      - smartprice-network
+
+  # Frontend Client Service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: smartprice-client
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
+    networks:
+      - smartprice-network
+
+networks:
+  smartprice-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local

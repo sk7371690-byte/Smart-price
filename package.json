@@ -1,0 +1,16 @@
+{
+  "name": "smartprice-workspace",
+  "version": "1.0.0",
+  "description": "SmartPrice - AI-Powered Price Comparison & Arbitrage Platform",
+  "scripts": {
+    "dev": "node start-both.js",
+    "start": "node start-both.js",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "test": "npm --prefix server test",
+    "build": "npm --prefix client run build"
+  },
+  "keywords": ["price-comparison", "ecommerce", "mern"],
+  "author": "Shailesh",
+  "license": "ISC"
+}
